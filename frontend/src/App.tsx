@@ -128,11 +128,11 @@ export default function App() {
       speak(countdown.toString(), false);
 
       if (countdown > 1) {
-        // Slowing down to 1.5 seconds per number for a more dramatic, clear read
-        const timer = setTimeout(() => setCountdown(countdown - 1), 1500);
+        // Updated to 1.8 seconds per number as requested
+        const timer = setTimeout(() => setCountdown(countdown - 1), 1800);
         return () => clearTimeout(timer);
       } else {
-        const timer = setTimeout(() => setAppState('RESULT'), 1500);
+        const timer = setTimeout(() => setAppState('RESULT'), 1800);
         return () => clearTimeout(timer);
       }
     }
@@ -253,10 +253,8 @@ export default function App() {
           100% { stroke-dashoffset: 0; }
         }
         @keyframes popIn {
-          0% { transform: scale(0.8); opacity: 0; }
-          20% { transform: scale(1); opacity: 1; }
-          80% { transform: scale(1); opacity: 1; }
-          100% { transform: scale(0.8); opacity: 0; }
+          0% { opacity: 1; transform: scale(1); }
+          100% { opacity: 1; transform: scale(1); }
         }
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(10px); }
@@ -347,7 +345,7 @@ export default function App() {
               <circle cx="200" cy="200" r="180" stroke="rgba(255,255,255,0.2)" strokeWidth="4" fill="none" />
               <circle cx="200" cy="200" r="180" stroke="white" strokeWidth="8" fill="none"
                 strokeDasharray="1130" strokeDashoffset="0"
-                style={{ animation: 'radialWipe 1.5s linear infinite', transformOrigin: 'center', transform: 'rotate(-90deg)' }} />
+                style={{ animation: 'radialWipe 1.8s linear infinite', transformOrigin: 'center', transform: 'rotate(-90deg)' }} />
             </svg>
 
             <div className="countdown-number" key={`num-${countdown}`}>
