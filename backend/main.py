@@ -116,11 +116,6 @@ async def websocket_endpoint(websocket: WebSocket):
         ) as session:
             
             print("Connected to Gemini Live API")
-            # Send initial greeting prompt as a raw string
-            await session.send(
-                input="Introduce yourself as the Mortgage AI assistant and start the conversation with the user about whether they can afford the house.",
-                end_of_turn=True
-            )
             
             async def receive_from_client():
                 """Receive audio bytes from frontend and send to Gemini"""
