@@ -84,19 +84,23 @@ export default function App() {
   }, [appState]);
 
   // Voice Readover
-  const speak = (text: string) => {
+  const speak = (text: string, isPremium: boolean = true) => {
     if ('speechSynthesis' in window) {
-      // Cancel any ongoing speech
       window.speechSynthesis.cancel();
 
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.9; // Slightly slower for dramatic effect
-      utterance.pitch = 0.8; // Deeper voice
+      utterance.volume = 1.0; // Max volume
 
-      // Try to find a nice premium-sounding voice
-      const voices = window.speechSynthesis.getVoices();
-      const premiumVoice = voices.find(v => v.name.includes('Daniel') || v.name.includes('Samantha') || v.name.includes('Premium'));
-      if (premiumVoice) utterance.voice = premiumVoice;
+      if (isPremium) {
+        utterance.rate = 0.85; // Slower for drama
+        utterance.pitch = 0.8;
+        const voices = window.speechSynthesis.getVoices();
+        const premiumVoice = voices.find(v => v.name.includes('Daniel') || v.name.includes('Samantha') || v.name.includes('Premium'));
+        if (premiumVoice) utterance.voice = premiumVoice;
+      } else {
+        utterance.rate = 0.7; // Very slow for the countdown numbers
+        utterance.pitch = 0.9;
+      }
 
       window.speechSynthesis.speak(utterance);
     }
@@ -120,14 +124,15 @@ export default function App() {
 
   useEffect(() => {
     if (appState === 'COUNTDOWN') {
-      // Speak the current countdown number
-      speak(countdown.toString());
+      // Speak the current countdown number slowly
+      speak(countdown.toString(), false);
 
       if (countdown > 1) {
-        const timer = setTimeout(() => setCountdown(countdown - 1), 700);
+        // Slowing down to 1.5 seconds per number for a more dramatic, clear read
+        const timer = setTimeout(() => setCountdown(countdown - 1), 1500);
         return () => clearTimeout(timer);
       } else {
-        const timer = setTimeout(() => setAppState('RESULT'), 700);
+        const timer = setTimeout(() => setAppState('RESULT'), 1500);
         return () => clearTimeout(timer);
       }
     }
@@ -342,7 +347,7 @@ export default function App() {
               <circle cx="200" cy="200" r="180" stroke="rgba(255,255,255,0.2)" strokeWidth="4" fill="none" />
               <circle cx="200" cy="200" r="180" stroke="white" strokeWidth="8" fill="none"
                 strokeDasharray="1130" strokeDashoffset="0"
-                style={{ animation: 'radialWipe 0.7s linear infinite', transformOrigin: 'center', transform: 'rotate(-90deg)' }} />
+                style={{ animation: 'radialWipe 1.5s linear infinite', transformOrigin: 'center', transform: 'rotate(-90deg)' }} />
             </svg>
 
             <div className="countdown-number" key={`num-${countdown}`}>
