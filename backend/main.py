@@ -132,12 +132,14 @@ async def websocket_endpoint(websocket: WebSocket):
                             # Frontend can send some initial setup as JSON
                             try:
                                 msg = json.loads(data["text"])
-                                if "type" in msg and msg["type"] == "setup":
-                                    # Send user's setup text to Gemini
-                                    await session.send(
-                                        input=msg["message"],
-                                        end_of_turn=True
-                                    )
+                                if "type" in msg:
+                                    msg_type = msg["type"]
+                                    if msg_type in ["setup", "client_content"]:
+                                        text_input = msg.get("message", msg.get("text"))
+                                        if text_input:
+                                            await session.send(input=text_input)
+                                    elif msg_type == "response.create":
+                                        await session.send(end_of_turn=True)
                             except json.JSONDecodeError:
                                 pass
                 except WebSocketDisconnect:
