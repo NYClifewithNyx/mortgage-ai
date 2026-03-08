@@ -83,8 +83,45 @@ export default function App() {
     }
   }, [appState]);
 
+  // Voice Readover
+  const speak = (text: string) => {
+    if ('speechSynthesis' in window) {
+      // Cancel any ongoing speech
+      window.speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.9; // Slightly slower for dramatic effect
+      utterance.pitch = 0.8; // Deeper voice
+
+      // Try to find a nice premium-sounding voice
+      const voices = window.speechSynthesis.getVoices();
+      const premiumVoice = voices.find(v => v.name.includes('Daniel') || v.name.includes('Samantha') || v.name.includes('Premium'));
+      if (premiumVoice) utterance.voice = premiumVoice;
+
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  useEffect(() => {
+    if (appState === 'RESULT') {
+      const textToSpeak = `
+        You are not qualified. 
+        The total monthly housing cost for this property is ${formatMoney(totalMonthlyHousingCost)}.
+        Your debt-to-income ratio is ${formatPercent(dti)}.
+        With an annual income of ${formatMoney(annualSalary)}, you have an income gap of ${formatMoney(incomeGap)}.
+        This property is far outside the qualifying range.
+      `;
+      // Delay slightly for dramatic reveal
+      const timer = setTimeout(() => speak(textToSpeak), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [appState]);
+
   useEffect(() => {
     if (appState === 'COUNTDOWN') {
+      // Speak the current countdown number
+      speak(countdown.toString());
+
       if (countdown > 1) {
         const timer = setTimeout(() => setCountdown(countdown - 1), 700);
         return () => clearTimeout(timer);
@@ -402,6 +439,24 @@ export default function App() {
             <p style={{ fontSize: '1.5rem', lineHeight: '1.6', fontWeight: '700', color: 'white', marginTop: '2.5rem', borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: '2.5rem' }}>
               With an income of {formatMoney(annualSalary)} per year, this home is far outside the qualifying range.
             </p>
+            <div style={{ marginTop: '2rem', textAlign: 'center' }}>
+              <button
+                className="btn"
+                style={{ background: 'transparent', border: '1px solid white', padding: '0.75rem 2rem', fontSize: '1.1rem' }}
+                onClick={() => {
+                  const textToSpeak = `
+                     You are not qualified. 
+                     The total monthly housing cost for this property is ${formatMoney(totalMonthlyHousingCost)}.
+                     Your debt-to-income ratio is ${formatPercent(dti)}.
+                     With an annual income of ${formatMoney(annualSalary)}, you have an income gap of ${formatMoney(incomeGap)}.
+                     This property is far outside the qualifying range.
+                   `;
+                  speak(textToSpeak);
+                }}
+              >
+                Replay Summary
+              </button>
+            </div>
           </div>
 
           <div style={{ textAlign: 'center', paddingBottom: '4rem' }}>
