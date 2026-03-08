@@ -104,18 +104,19 @@ export default function App() {
 
   useEffect(() => {
     if (appState === 'RESULT') {
-      const textToSpeak = `
+      const summaryText = `
         You are not qualified. 
-        The total monthly housing cost for this property is ${formatMoney(totalMonthlyHousingCost)}.
-        Your debt-to-income ratio is ${formatPercent(dti)}.
-        With an annual income of ${formatMoney(annualSalary)}, you have an income gap of ${formatMoney(incomeGap)}.
+        Based on your annual income of ${formatMoney(annualSalary)}, the monthly housing cost of ${formatMoney(totalMonthlyHousingCost)} is dramatically higher than what lenders allow. 
+        Your debt-to-income ratio is ${formatPercent(dti)}, which is far above the forty-three percent limit. 
+        In fact, this property requires over one hundred thousand dollars per month in housing costs alone. 
+        To qualify, you would need an annual income of at least ${formatMoney(requiredAnnualIncome)}, leaving an income gap of ${formatMoney(incomeGap)}. 
         This property is far outside the qualifying range.
       `;
       // Delay slightly for dramatic reveal
-      const timer = setTimeout(() => speak(textToSpeak), 1000);
+      const timer = setTimeout(() => speak(summaryText), 1000);
       return () => clearTimeout(timer);
     }
-  }, [appState]);
+  }, [appState, annualSalary, totalMonthlyHousingCost, dti, incomeGap, requiredAnnualIncome]);
 
   useEffect(() => {
     if (appState === 'COUNTDOWN') {
@@ -444,14 +445,15 @@ export default function App() {
                 className="btn"
                 style={{ background: 'transparent', border: '1px solid white', padding: '0.75rem 2rem', fontSize: '1.1rem' }}
                 onClick={() => {
-                  const textToSpeak = `
-                     You are not qualified. 
-                     The total monthly housing cost for this property is ${formatMoney(totalMonthlyHousingCost)}.
-                     Your debt-to-income ratio is ${formatPercent(dti)}.
-                     With an annual income of ${formatMoney(annualSalary)}, you have an income gap of ${formatMoney(incomeGap)}.
-                     This property is far outside the qualifying range.
-                   `;
-                  speak(textToSpeak);
+                  const summaryText = `
+                    You are not qualified. 
+                    Based on your annual income of ${formatMoney(annualSalary)}, the monthly housing cost of ${formatMoney(totalMonthlyHousingCost)} is dramatically higher than what lenders allow. 
+                    Your debt-to-income ratio is ${formatPercent(dti)}, which is far above the forty-three percent limit. 
+                    In fact, this property requires over one hundred thousand dollars per month in housing costs alone. 
+                    To qualify, you would need an annual income of at least ${formatMoney(requiredAnnualIncome)}, leaving an income gap of ${formatMoney(incomeGap)}. 
+                    This property is far outside the qualifying range.
+                  `;
+                  speak(summaryText);
                 }}
               >
                 Replay Summary
