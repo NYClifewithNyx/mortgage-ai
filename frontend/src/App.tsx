@@ -89,20 +89,26 @@ export default function App() {
       window.speechSynthesis.cancel();
 
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.volume = 1.0; // Max volume
+      utterance.volume = 1.0;
 
       if (isPremium) {
-        utterance.rate = 0.85; // Slower for drama
+        utterance.rate = 0.85;
         utterance.pitch = 0.8;
         const voices = window.speechSynthesis.getVoices();
         const premiumVoice = voices.find(v => v.name.includes('Daniel') || v.name.includes('Samantha') || v.name.includes('Premium'));
         if (premiumVoice) utterance.voice = premiumVoice;
       } else {
-        utterance.rate = 1.1; // Punchy for the 1-second countdown
+        utterance.rate = 1.1;
         utterance.pitch = 0.9;
       }
 
       window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  const stopSpeaking = () => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
     }
   };
 
@@ -465,7 +471,7 @@ export default function App() {
           </div>
 
           <div style={{ textAlign: 'center', paddingBottom: '4rem' }}>
-            <button className="btn" style={{ padding: '1.25rem 4rem', fontSize: '1.5rem', background: '#2563eb' }} onClick={() => window.location.reload()}>
+            <button className="btn" style={{ padding: '1.25rem 4rem', fontSize: '1.5rem', background: '#2563eb' }} onClick={() => { stopSpeaking(); window.location.reload(); }}>
               Test Another Property
             </button>
           </div>
