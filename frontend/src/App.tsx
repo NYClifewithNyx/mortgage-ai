@@ -98,7 +98,7 @@ export default function App() {
         const premiumVoice = voices.find(v => v.name.includes('Daniel') || v.name.includes('Samantha') || v.name.includes('Premium'));
         if (premiumVoice) utterance.voice = premiumVoice;
       } else {
-        utterance.rate = 0.7; // Very slow for the countdown numbers
+        utterance.rate = 1.1; // Punchy for the 1-second countdown
         utterance.pitch = 0.9;
       }
 
@@ -128,11 +128,11 @@ export default function App() {
       speak(countdown.toString(), false);
 
       if (countdown > 1) {
-        // Updated to 1.8 seconds per number as requested
-        const timer = setTimeout(() => setCountdown(countdown - 1), 1800);
+        // Updated to 1 second per number as requested
+        const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
         return () => clearTimeout(timer);
       } else {
-        const timer = setTimeout(() => setAppState('RESULT'), 1800);
+        const timer = setTimeout(() => setAppState('RESULT'), 1000);
         return () => clearTimeout(timer);
       }
     }
@@ -345,7 +345,7 @@ export default function App() {
               <circle cx="200" cy="200" r="180" stroke="rgba(255,255,255,0.2)" strokeWidth="4" fill="none" />
               <circle cx="200" cy="200" r="180" stroke="white" strokeWidth="8" fill="none"
                 strokeDasharray="1130" strokeDashoffset="0"
-                style={{ animation: 'radialWipe 1.8s linear infinite', transformOrigin: 'center', transform: 'rotate(-90deg)' }} />
+                style={{ animation: 'radialWipe 1s linear infinite', transformOrigin: 'center', transform: 'rotate(-90deg)' }} />
             </svg>
 
             <div className="countdown-number" key={`num-${countdown}`}>
